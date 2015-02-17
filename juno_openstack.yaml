@@ -24,7 +24,7 @@ trusty-juno:
     mysql:
       #branch:  lp:charms/trusty/percona-cluster
       charm: cs:trusty/percona-cluster
-      num_units: 3
+#      num_units: 3
 #      to: 
 #        - 'lxc:nova-cloud-controller=0'
 #        - 'lxc:nova-cloud-controller=1'
