@@ -24,12 +24,12 @@ trusty-juno:
     mysql:
       #branch:  lp:charms/trusty/percona-cluster
       charm: cs:trusty/percona-cluster
-#      num_units: 3
-#      to: 
-#        - 'lxc:nova-cloud-controller=0'
-#        - 'lxc:nova-cloud-controller=1'
-#        - 'lxc:neutron-gateway=0'
-      to: 'lxc:nova-cloud-controller'
+      num_units: 3
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+        - 'lxc:neutron-gateway=0'
+#      to: 'lxc:nova-cloud-controller'
       options:
         root-password: ubuntu
         sst-password: ubuntu
@@ -42,31 +42,31 @@ trusty-juno:
         access-network: 10.100.1.0/24
     rabbitmq-server:
       charm: cs:trusty/rabbitmq-server
-      to: 'lxc:nova-cloud-controller'
-      #to: 
-      #  - 'lxc:nova-cloud-controller=0'
-      #  - 'lxc:nova-cloud-controller=1'
-      #num_units: 2
+      #to: 'lxc:nova-cloud-controller'
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+      num_units: 2
       options:
         ha-bindiface: juju-br0
         ha-vip-only: False
     rabbitmq-server-neutron:
       charm: cs:trusty/rabbitmq-server
-      to: 'lxc:nova-cloud-controller'
-      #to: 
-      #  - 'lxc:nova-cloud-controller=0'
-      #  - 'lxc:nova-cloud-controller=1'
-      #num_units: 2
+      #to: 'lxc:nova-cloud-controller'
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+      num_units: 2
       options:
         ha-bindiface: juju-br0
         ha-vip-only: False
     keystone:
       charm: cs:trusty/keystone
-      to: 'lxc:nova-cloud-controller'
-      #to: 
-      #  - 'lxc:nova-cloud-controller=0'
-      #  - 'lxc:nova-cloud-controller=1'
-      #num_units: 2
+      #to: 'lxc:nova-cloud-controller'
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+      num_units: 2
       options:
         admin-password: openstack
         admin-token: ubuntu
@@ -79,11 +79,11 @@ trusty-juno:
         os-public-network: 10.100.1.0/24
     openstack-dashboard:
       charm: cs:trusty/openstack-dashboard
-      to: 'lxc:nova-cloud-controller'
-      #to: 
-      #  - 'lxc:nova-cloud-controller=0'
-      #  - 'lxc:nova-cloud-controller=1'
-      #num_units: 2
+      #to: 'lxc:nova-cloud-controller'
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+      num_units: 2
       options:
         vip: 10.100.1.203
         ha-bindiface: juju-br0
@@ -115,11 +115,11 @@ trusty-juno:
         #quantum-security-groups: 'yes'
     neutron-api:
       charm: cs:trusty/neutron-api
-      to: 'lxc:nova-cloud-controller'
-      #to: 
-      #  - 'lxc:nova-cloud-controller=0'
-      #  - 'lxc:nova-cloud-controller=1'
-      #num_units: 2
+      #to: 'lxc:nova-cloud-controller'
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+      num_units: 2
       options:
         neutron-security-groups: True
     neutron-openvswitch:
@@ -140,11 +140,11 @@ trusty-juno:
         ceph-osd-replication-count: 3
     cinder:
       charm: cs:trusty/cinder
-      to: 'lxc:nova-cloud-controller'
-      #to: 
-      #  - 'lxc:nova-cloud-controller=0'
-      #  - 'lxc:nova-cloud-controller=1'
-      #num_units: 2
+      #to: 'lxc:nova-cloud-controller'
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+      num_units: 2
       options:
         block-device: "None"
         #ceph-osd-replication-count: 3
@@ -159,11 +159,11 @@ trusty-juno:
         #overwrite: 'true'
     glance:
       charm: cs:trusty/glance
-      to: 'lxc:nova-cloud-controller'
-      #to: 
-      #  - 'lxc:nova-cloud-controller=0'
-      #  - 'lxc:nova-cloud-controller=1'
-      #num_units: 2
+      #to: 'lxc:nova-cloud-controller'
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+      num_units: 2
       options:
         ceph-osd-replication-count: 3
         vip: 10.100.1.206
@@ -173,11 +173,11 @@ trusty-juno:
         os-public-network: 10.100.1.0/24
     ceilometer:
       charm: cs:trusty/ceilometer
-      to: 'lxc:nova-cloud-controller'
-      #to: 
-      #  - 'lxc:nova-cloud-controller=0'
-      #  - 'lxc:nova-cloud-controller=1'
-      #num_units: 2
+      #to: 'lxc:nova-cloud-controller'
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+      num_units: 2
       options:
         vip: 10.100.1.207
         ha-bindiface: juju-br0
@@ -186,12 +186,12 @@ trusty-juno:
         os-public-network: 10.100.1.0/24
     mongodb:
       charm: cs:trusty/mongodb
-      to: 'lxc:nova-cloud-controller'
-      #to: 
-      #  - 'lxc:nova-cloud-controller=0'
-      #  - 'lxc:nova-cloud-controller=1'
-      #  - 'lxc:neutron-gateway=1'
-      #num_units: 3
+      #to: 'lxc:nova-cloud-controller'
+      to: 
+        - 'lxc:nova-cloud-controller=0'
+        - 'lxc:nova-cloud-controller=1'
+        - 'lxc:neutron-gateway=1'
+      num_units: 3
     hacluster-mysql:
       charm: cs:trusty/hacluster
     hacluster-cinder:
