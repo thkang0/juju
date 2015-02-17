@@ -1,0 +1,259 @@
+ceph:
+  series: trusty
+  services:
+    ceph:
+      branch: lp:~openstack-charmers/charms/trusty/ceph/trunk
+      constraints: tags=ceph
+      num_units: 3
+      options:
+        fsid: '6547bd3e-1397-11e2-82e5-53567c8d32dc'
+        monitor-secret: 'AQCXrnZQwI7KGBAAiPofmKEXKxu5bUzoYLVkbQ=='
+        osd-devices: '/dev/vdb'
+        osd-reformat: 'yes'
+
+trusty-juno:
+  series: trusty
+  overrides:
+#    openstack-origin: distro
+    openstack-origin: cloud:trusty-juno
+  services:
+#   mysql:
+#     charm: cs:trusty/mysql
+#      options:
+#        dataset-size: '128M'
+    mysql:
+      #branch:  lp:charms/trusty/percona-cluster
+      charm: cs:trusty/percona-cluster
+      num_units: 3
+#      to: 
+#        - 'lxc:nova-cloud-controller=0'
+#        - 'lxc:nova-cloud-controller=1'
+#        - 'lxc:neutron-gateway=0'
+      to: 'lxc:nova-cloud-controller'
+      options:
+        root-password: ubuntu
+        sst-password: ubuntu
+        max-connections: 5000
+        dataset-size: '75%'
+        vip: 10.100.1.201
+        vip_iface: juju-br0
+        vip_cidr: 24
+        ha-bindiface: juju-br0
+        access-network: 10.100.1.0/24
+    rabbitmq-server:
+      charm: cs:trusty/rabbitmq-server
+      to: 'lxc:nova-cloud-controller'
+      #to: 
+      #  - 'lxc:nova-cloud-controller=0'
+      #  - 'lxc:nova-cloud-controller=1'
+      #num_units: 2
+      options:
+        ha-bindiface: juju-br0
+        ha-vip-only: False
+    rabbitmq-server-neutron:
+      charm: cs:trusty/rabbitmq-server
+      to: 'lxc:nova-cloud-controller'
+      #to: 
+      #  - 'lxc:nova-cloud-controller=0'
+      #  - 'lxc:nova-cloud-controller=1'
+      #num_units: 2
+      options:
+        ha-bindiface: juju-br0
+        ha-vip-only: False
+    keystone:
+      charm: cs:trusty/keystone
+      to: 'lxc:nova-cloud-controller'
+      #to: 
+      #  - 'lxc:nova-cloud-controller=0'
+      #  - 'lxc:nova-cloud-controller=1'
+      #num_units: 2
+      options:
+        admin-password: openstack
+        admin-token: ubuntu
+        vip: 10.100.1.202
+        ha-bindiface: juju-br0
+        use-https: "no"
+        https-service-endpoints: "False"
+        os-admin-network: 10.100.1.0/24
+        os-internal-network: 10.100.1.0/24
+        os-public-network: 10.100.1.0/24
+    openstack-dashboard:
+      charm: cs:trusty/openstack-dashboard
+      to: 'lxc:nova-cloud-controller'
+      #to: 
+      #  - 'lxc:nova-cloud-controller=0'
+      #  - 'lxc:nova-cloud-controller=1'
+      #num_units: 2
+      options:
+        vip: 10.100.1.203
+        ha-bindiface: juju-br0
+        secret: 'ubuntu'
+        neutron-network-vpn: True
+        neutron-network-lb: True
+        neutron-network-firewall: True
+    nova-compute:
+      charm: cs:trusty/nova-compute
+      constraints: tags=compute
+      #constraints: cpu-cores=4 mem=8G 
+      num_units: 2
+      options:
+        enable-live-migration: True
+        enable-resize: True
+        migration-auth-type: 'ssh'
+    nova-cloud-controller:
+      charm: cs:trusty/nova-cloud-controller
+      constraints: tags=controller
+      num_units: 2
+      options:
+        network-manager: Neutron
+        config-flags: 'osapi_max_limit=30000'
+        vip: 10.100.1.204
+        ha-bindiface: juju-br0
+        os-admin-network: 10.100.1.0/24
+        os-internal-network: 10.100.1.0/24
+        os-public-network: 10.100.1.0/24
+        #quantum-security-groups: 'yes'
+    neutron-api:
+      charm: cs:trusty/neutron-api
+      to: 'lxc:nova-cloud-controller'
+      #to: 
+      #  - 'lxc:nova-cloud-controller=0'
+      #  - 'lxc:nova-cloud-controller=1'
+      #num_units: 2
+      options:
+        neutron-security-groups: True
+    neutron-openvswitch:
+      charm: cs:trusty/neutron-openvswitch
+    neutron-gateway:
+      charm: cs:trusty/quantum-gateway
+      constraints: tags=neutron
+      #constraints: cpu-cores=2 mem=4G 
+      num_units: 2
+      options:
+        instance-mtu: 1300
+        ext-port: 'eth1'
+        ha-bindiface: 'juju-br0'
+        ha-legacy-mode: 'True'
+    cinder-ceph:
+      charm: cs:trusty/cinder-ceph
+      options:
+        ceph-osd-replication-count: 3
+    cinder:
+      charm: cs:trusty/cinder
+      to: 'lxc:nova-cloud-controller'
+      #to: 
+      #  - 'lxc:nova-cloud-controller=0'
+      #  - 'lxc:nova-cloud-controller=1'
+      #num_units: 2
+      options:
+        block-device: "None"
+        #ceph-osd-replication-count: 3
+        glance-api-version: 2
+        config-flags: 'osapi_max_limit=30000'
+        vip: 10.100.1.205
+        ha-bindiface: juju-br0
+        os-admin-network: 10.100.1.0/24
+        os-internal-network: 10.100.1.0/24
+        os-public-network: 10.100.1.0/24
+        #block-device: '/var/lib/cinder/loopback.img'
+        #overwrite: 'true'
+    glance:
+      charm: cs:trusty/glance
+      to: 'lxc:nova-cloud-controller'
+      #to: 
+      #  - 'lxc:nova-cloud-controller=0'
+      #  - 'lxc:nova-cloud-controller=1'
+      #num_units: 2
+      options:
+        ceph-osd-replication-count: 3
+        vip: 10.100.1.206
+        ha-bindiface: juju-br0
+        os-admin-network: 10.100.1.0/24
+        os-internal-network: 10.100.1.0/24
+        os-public-network: 10.100.1.0/24
+    ceilometer:
+      charm: cs:trusty/ceilometer
+      to: 'lxc:nova-cloud-controller'
+      #to: 
+      #  - 'lxc:nova-cloud-controller=0'
+      #  - 'lxc:nova-cloud-controller=1'
+      #num_units: 2
+      options:
+        vip: 10.100.1.207
+        ha-bindiface: juju-br0
+        os-admin-network: 10.100.1.0/24
+        os-internal-network: 10.100.1.0/24
+        os-public-network: 10.100.1.0/24
+    mongodb:
+      charm: cs:trusty/mongodb
+      to: 'lxc:nova-cloud-controller'
+      #to: 
+      #  - 'lxc:nova-cloud-controller=0'
+      #  - 'lxc:nova-cloud-controller=1'
+      #  - 'lxc:neutron-gateway=1'
+      #num_units: 3
+    hacluster-mysql:
+      charm: cs:trusty/hacluster
+    hacluster-cinder:
+      charm: cs:trusty/hacluster
+    hacluster-keystone:
+      charm: cs:trusty/hacluster
+    hacluster-nova:
+      charm: cs:trusty/hacluster
+    hacluster-horizon:
+      charm: cs:trusty/hacluster
+    hacluster-glance:
+      charm: cs:trusty/hacluster
+    hacluster-neutron:
+      charm: cs:trusty/hacluster
+    hacluster-ceilometer:
+      charm: cs:trusty/hacluster
+    ceilometer-agent:
+      charm: cs:trusty/ceilometer-agent
+  relations:
+    - [ hacluster-mysql, mysql ]
+    - [ hacluster-cinder, cinder ]
+    - [ hacluster-keystone, keystone ]
+    - [ hacluster-nova, nova-cloud-controller ]
+    - [ hacluster-horizon, openstack-dashboard ]
+    - [ hacluster-glance, glance ]
+    - [ hacluster-neutron, neutron-gateway ]
+    - [ hacluster-ceilometer, ceilometer]
+    - [ keystone, mysql ]
+    - [ nova-cloud-controller, mysql ]
+    - [ nova-cloud-controller, rabbitmq-server ]
+    - [ nova-cloud-controller, glance ]
+    - [ nova-cloud-controller, keystone ]
+    - [ nova-compute, nova-cloud-controller ]
+    - [ nova-compute, mysql ]
+    - [ nova-compute, rabbitmq-server ]
+    - [ nova-compute, glance ]
+    - [ glance, mysql ]
+    - [ glance, keystone ]
+    - [ glance, rabbitmq-server ]
+    - [ glance, cinder ]
+    - [ cinder, mysql ]
+    - [ cinder, rabbitmq-server ]
+    - [ cinder, nova-cloud-controller ]
+    - [ cinder, keystone ]
+    - [ cinder, cinder-ceph ]
+    - [ neutron-gateway, mysql ]
+    - [ 'neutron-gateway:amqp', rabbitmq-server ]
+    - [ neutron-gateway, nova-cloud-controller ]
+    - [ openstack-dashboard, keystone ]
+    - [ neutron-api, mysql ]
+    - [ neutron-api, rabbitmq-server-neutron ]
+    - [ neutron-api, nova-cloud-controller ]
+    - [ neutron-api, neutron-openvswitch ]
+    - [ neutron-api, neutron-gateway ]
+    - [ neutron-api, keystone ]
+    - [ neutron-openvswitch, nova-compute ]
+    - [ neutron-openvswitch, rabbitmq-server-neutron ]
+    - [ neutron-openvswitch, neutron-gateway ]
+    - [ ceilometer, rabbitmq-server ]
+    - [ ceilometer, ceilometer-agent ]
+    - [ ceilometer, keystone ]
+    - [ ceilometer, mongodb ]
+    - [ ceilometer-agent, nova-compute ]
+
+
