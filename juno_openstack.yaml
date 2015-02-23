@@ -256,4 +256,3 @@ trusty-juno:
     - [ ceilometer, mongodb ]
     - [ ceilometer-agent, nova-compute ]
 
-
