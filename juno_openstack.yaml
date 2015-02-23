@@ -36,9 +36,9 @@ trusty-juno:
         max-connections: 5000
         dataset-size: '75%'
         vip: 10.100.1.201
-        vip_iface: juju-br0
+        vip_iface: eth0
         vip_cidr: 24
-        ha-bindiface: juju-br0
+        ha-bindiface: eth0
         access-network: 10.100.1.0/24
     rabbitmq-server:
       charm: cs:trusty/rabbitmq-server
@@ -48,7 +48,7 @@ trusty-juno:
         - 'lxc:nova-cloud-controller=1'
       num_units: 2
       options:
-        ha-bindiface: juju-br0
+        ha-bindiface: eth0
         ha-vip-only: False
     rabbitmq-server-neutron:
       charm: cs:trusty/rabbitmq-server
@@ -58,7 +58,7 @@ trusty-juno:
         - 'lxc:nova-cloud-controller=1'
       num_units: 2
       options:
-        ha-bindiface: juju-br0
+        ha-bindiface: eth0
         ha-vip-only: False
     keystone:
       charm: cs:trusty/keystone
@@ -71,7 +71,7 @@ trusty-juno:
         admin-password: openstack
         admin-token: ubuntu
         vip: 10.100.1.202
-        ha-bindiface: juju-br0
+        ha-bindiface: eth0
         use-https: "no"
         https-service-endpoints: "False"
         os-admin-network: 10.100.1.0/24
@@ -86,7 +86,7 @@ trusty-juno:
       num_units: 2
       options:
         vip: 10.100.1.203
-        ha-bindiface: juju-br0
+        ha-bindiface: eth0
         secret: 'ubuntu'
         neutron-network-vpn: True
         neutron-network-lb: True
@@ -151,7 +151,7 @@ trusty-juno:
         glance-api-version: 2
         config-flags: 'osapi_max_limit=30000'
         vip: 10.100.1.205
-        ha-bindiface: juju-br0
+        ha-bindiface: eth0
         os-admin-network: 10.100.1.0/24
         os-internal-network: 10.100.1.0/24
         os-public-network: 10.100.1.0/24
@@ -167,7 +167,7 @@ trusty-juno:
       options:
         ceph-osd-replication-count: 3
         vip: 10.100.1.206
-        ha-bindiface: juju-br0
+        ha-bindiface: eth0
         os-admin-network: 10.100.1.0/24
         os-internal-network: 10.100.1.0/24
         os-public-network: 10.100.1.0/24
@@ -180,7 +180,7 @@ trusty-juno:
       num_units: 2
       options:
         vip: 10.100.1.207
-        ha-bindiface: juju-br0
+        ha-bindiface: eth0
         os-admin-network: 10.100.1.0/24
         os-internal-network: 10.100.1.0/24
         os-public-network: 10.100.1.0/24
@@ -252,7 +252,7 @@ trusty-juno:
     - [ neutron-openvswitch, neutron-gateway ]
     - [ ceilometer, rabbitmq-server ]
     - [ ceilometer, ceilometer-agent ]
-    - [ ceilometer:identity-service, keystone ]
+    - [ 'ceilometer:identity-service', keystone ]
     - [ ceilometer, mongodb ]
     - [ ceilometer-agent, nova-compute ]
 
