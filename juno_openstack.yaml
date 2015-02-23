@@ -252,7 +252,7 @@ trusty-juno:
     - [ neutron-openvswitch, neutron-gateway ]
     - [ ceilometer, rabbitmq-server ]
     - [ ceilometer, ceilometer-agent ]
-    - [ ceilometer, keystone ]
+    - [ ceilometer:identity-service, keystone ]
     - [ ceilometer, mongodb ]
     - [ ceilometer-agent, nova-compute ]
 

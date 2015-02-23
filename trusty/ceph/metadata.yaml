@@ -1,0 +1,24 @@
+name: ceph
+summary: Highly scalable distributed storage
+maintainer: James Page <james.page@ubuntu.com>
+description: |
+ Ceph is a distributed storage and network file system designed to provide
+ excellent performance, reliability, and scalability.
+categories:
+    - file-servers
+peers:
+  mon:
+    interface: ceph
+provides:
+  nrpe-external-master:
+    interface: nrpe-external-master
+    scope: container
+  client:
+    interface: ceph-client
+  osd:
+    interface: ceph-osd
+  radosgw:
+    interface: ceph-radosgw
+  nrpe-external-master:
+    interface: nrpe-external-master
+    scope: container
